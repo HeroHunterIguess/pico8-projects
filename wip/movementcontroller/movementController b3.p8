@@ -89,16 +89,11 @@ function _update()
  end
 	
  --keeping playerx in bounds
- --fix this limit to work for
- --all different levels !!
- minx=currentlevel
- maxx=(currentlevel+1)*128
-	 
- if playerx<minx then
+ if playerx<2 then
   playerx=minx
   xvelocity*=0.01
  end
- if playerx>maxx then
+ if playerx>126 then
   playerx=maxx
   xvelocity*=0.01
  end
