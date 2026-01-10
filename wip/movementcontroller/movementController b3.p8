@@ -14,18 +14,20 @@ mapy=0
 
 --checking if the tile is collidable
 function checkcollision(flag,gmode)
-	tilecolumn = flr(playerx/8)
-	if gmode==false then
- 	tilerow = flr(playery/8)
+ tilecolumn=flr(playerx/8)
+ if gmode==false then
+  tilerow=flr(playery/8)
  elseif gmode==true then
- 	tilerow = flr((playery+1)/8)
+  tilerow=flr((playery+1)/8)
  end
  
- spriteatplayer = mget(tilecolumn+mapx,tilerow+mapy)
+ spriteatplayer=mget(tilecolumn+mapx,tilerow+mapy)
  
  if fget(spriteatplayer,flag) then
- 	return true 
- else return false end
+  return true 
+ else 
+  return false 
+ end
 end
 
 --check if on ground or solid tile
@@ -34,128 +36,127 @@ function ontile()
   return 1
  --check if on up tile
  elseif checkcollision(1,true) then
- 	return 1
+  return 1
  --check if on left tile
  elseif checkcollision(2,true) then
- 	return 2
+  return 2
  --check if on right tile
  elseif checkcollision(3,true) then
- 	return 3
+  return 3
  --check if on down tile
  elseif checkcollision(4,true) then
- 	return 4
+  return 4
  --check if on exit tile
  elseif checkcollision(5,true) then
- 	return 5
+  return 5
  else
- 	return 0
+  return 0
  end
 end
 
 --reset and move to nxt lvl
 function nextlevel()
-	currentlevel+=1
-	mapx+=16
-	playerx=60
-	playery=126
+ currentlevel+=1
+ mapx+=16
+ playerx=60
+ playery=126
 end
 
 --runs every frame
 function _update()
-	--get player inputs
-	if btn(0) then
-	 xvelocity-=0.2
-	elseif btn(1) then
-		xvelocity+=0.2
-	else
-		xvelocity*=0.05 end
-  
-	--set max velocities
-	if xvelocity>2 then
-	 xvelocity=2end
-	if xvelocity<-2 then
-		xvelocity=-2end
-	if yvelocity>10 then
-		yvelocity=10end
-	if yvelocity<-10 then
-		yvelocity=-10end
-	
-	--keeping playery in bounds	
-	--temporary limit at 126 !!
-	if playery >= 126 then
-		playery = 126
-	end
+ --get player inputs
+ if btn(0) then
+  xvelocity-=0.2
+ elseif btn(1) then
+  xvelocity+=0.2
+ else
+ xvelocity*=0.05 end
+
+ --set max velocities
+ if xvelocity>2 then
+  xvelocity=2 end
+ if xvelocity<-2 then
+  xvelocity=-2 end
+ if yvelocity>10 then
+  yvelocity=10 end
+ if yvelocity<-10 then
+  yvelocity=-10 end
+
+ --keeping playery in bounds
+ --temporary limit at 126 !!
+ if playery >= 126 then
+  playery = 126
+ end
 	
  --keeping playerx in bounds
  --fix this limit to work for
  --all different levels !!
-	
-	minx=currentlevel
-	maxx=(currentlevel+1)*128
+ minx=currentlevel
+ maxx=(currentlevel+1)*128
 	 
- if playerx < minx then
+ if playerx<minx then
   playerx=minx
   xvelocity*=0.01
  end
- if playerx > maxx then
+ if playerx>maxx then
   playerx=maxx
   xvelocity*=0.01
  end
 		
-	--check spike collisions
-	if checkcollision(0,false) then
-		yvelocity=0
-		xvelocity=0
-		playerx=60
-		playery=126
-	end
+ --check spike collisions
+ if checkcollision(0,false) then
+  yvelocity=0
+  xvelocity=0
+  playerx=60
+  playery=126
+ end
+
+ --check direction tiles
 	
-	--check direction tiles
+ --check if in up tile
+ if ontile()==1 then
+  playery-=2
+  yvelocity=-1.25
+ end
+ --check if in left tile
+ if ontile()==2 then
+  playerx-=2
+  playery-=0.1
+  xvelocity=-1.25
+  yvelocity=-0.5
+ end
+ --check if in right tile
+ if ontile()==3 then
+  playerx+=2
+  playery-=0.1
+  xvelocity=1.25
+  yvelocity=-0.5
+ end
+ --check if in down tile
+ if ontile()==4 then
+  playery+=2.25
+  yvelocity=1.25
+ end
+ --check if in exit tile
+ if ontile()==5 then
+  nextlevel()
+ end
 	
-	--check if in up tile
-	if ontile()==1 then
-		playery-=2
-		yvelocity=-1.25
-	end
-	--check if in left tile
-	if ontile()==2 then
-		playerx-=2
-		playery-=0.1
-		xvelocity=-1.25
-		yvelocity=-0.5
-	end
-	--check if in right tile
-	if ontile()==3 then
-		playerx+=2
-		playery-=0.1
-		xvelocity=1.25
-		yvelocity=-0.5
-	end
-	--check if in down tile
-	if ontile()==4 then
-		playery+=2.25
-		yvelocity=1.25
-	end
-	--check if in exit tile
-	if ontile()==5 then
-		nextlevel()
-	end
-	
-	--update movement
-	yvelocity+=gravity
-	playery+=yvelocity
-	playerx+=xvelocity
+ --update movement
+ yvelocity+=gravity
+ playery+=yvelocity
+ playerx+=xvelocity
 end
 
 --drawing on screen every frame
 function _draw()
-	cls(0)
-	
-	--rendering the level
-	map(mapx, mapy, 0, 0, 16, 32)
-	
-	--drawing player
-	rectfill(playerx-1,playery-1,playerx+1,playery+1,9)
+ cls(0)
+ 
+ --rendering the level
+ map(mapx,mapy,0,0,16,32)
+ 
+ --drawing player
+ rectfill(playerx-1,playery-1,playerx+1,playery+1,9)
 end
 
 __gfx__
