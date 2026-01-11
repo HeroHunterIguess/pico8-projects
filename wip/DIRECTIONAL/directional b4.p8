@@ -13,6 +13,7 @@ currentlevel=0
 mapx=0
 mapy=0
 minutes=0
+deaths=0
 continue=true
 
 --checking if the tile is collidable
@@ -149,6 +150,7 @@ function _update()
   playerx=64
   playery=126
   sfx(5,1)
+  deaths+=1
  end
 
  --check direction tiles
@@ -183,11 +185,11 @@ function _update()
  end
  --check if in exit tile
  if ontile()==5 then
+  sfx(4,1)
   --only move on when in normal
   --mode and continue==true1
   if continue then
    nextlevel()
-   sfx(4,1)
   else
    yvelocity=0
    xvelocity=0
