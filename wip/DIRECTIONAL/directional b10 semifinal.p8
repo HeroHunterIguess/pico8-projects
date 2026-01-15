@@ -68,7 +68,7 @@ function nextlevel(before)
   currentlevel+=1
   mapx+=16
   if currentlevel%8==0 then
- 	 mapx=0
+   mapx=0
    mapy+=16
   end
  end
@@ -143,11 +143,11 @@ function _update()
  end
 
  if currentlevel!=0 then
-	 elapsed=time()-timer_start
-	 minutes=flr(elapsed/60)
+  elapsed=time()-timer_start
+  minutes=flr(elapsed/60)
   seconds=flr(elapsed%60)
   millis=flr(elapsed*1000)%1000
-	end
+ end
 
  --get player inputs
  if btn(0) then
@@ -268,6 +268,7 @@ function _draw()
   if seconds<10 then
    seconds="0"..seconds
   end
+
   minutestr=minutes
   if minutes<10 then
    minutesstr="0"..minutes
@@ -286,9 +287,9 @@ function _draw()
  
  --display info on first level
  if currentlevel==0 then
- 	print("⬅️ use arrows to move ➡️",15,2,6)
- 	print("tiles push you in the arrows",5,15,6)
- 	print("direction",45,22,6)
+  print("⬅️ use arrows to move ➡️",15,2,6)
+  print("tiles push you in the arrows",5,15,6)
+  print("direction",45,22,6)
  end
  
  --display ui overlay
@@ -324,66 +325,64 @@ function _draw()
    end_time=time()
   end 
   
-  --resetting up all timer stuff
-  --based on current time
-  elapsed=end_time-timer_start
-  minutes=flr(elapsed/60)
-  seconds=flr(elapsed%60)
-  millis=flr(elapsed*1000)%1000
+ --resetting all timer stuff
+ elapsed=end_time-timer_start
+ minutes=flr(elapsed/60)
+ seconds=flr(elapsed%60)
+ millis=flr(elapsed*1000)%1000
   
-  --setting all the extra 0's
-  if seconds<10 then
-   seconds="0"..seconds
-  end
-  if minutes<10 then
-   minutesstr="0"..minutes
-  end
-  if millis<10 then
-   millis="00"..millis
-  end
-  if millis<100 then
-   millis="0"..millis
-  end
+ --setting all the extra 0's
+ if seconds<10 then
+  seconds="0"..seconds
+ end
+ if minutes<10 then
+  minutesstr="0"..minutes
+ end
+ if millis<10 then
+  millis="00"..millis
+ end
+ if millis<100 then
+  millis="0"..millis
+ end
   
-  timerstr=minutesstr..":"..seconds.."."..millis
+ timerstr=minutesstr..":"..seconds.."."..millis
 	 
-	 wob=sin(time()*2)
+ wob=sin(time()*2)
 	 
-	 --display practice mode end
-	 if cheated then
-	  spr(32,31,55,2,2)
-	  spr(32,47,55,2,2)
-	  spr(32,63,55,2,2)
-	  spr(32,79,55,2,2)
+ --display practice mode end
+ if cheated then
+  spr(32,31,55,2,2)
+  spr(32,47,55,2,2)
+  spr(32,63,55,2,2)
+  spr(32,79,55,2,2)
+  
+  print("congratulations!",32,30+wob,6)
 	  
-   print("congratulations!",32,30+wob,6)
+  print("practice enabled",32,72,8)
 	  
-	  print("practice enabled",32,72,8)
+  print(timerstr,45,42,8)
+  print("deaths: "..deaths,45,50,8)
+ elseif not cheated and not bonus then
+  --default ending
+  print("congratulations!",32,40+wob,6)
+  print(timerstr,45,52,6)
+  print("deaths: "..deaths,45,60,6)
 	  
-	  print(timerstr,45,42,8)
-   print("deaths: "..deaths,45,50,8)
-  elseif not cheated and not bonus then
-   --default ending
-
-   print("congratulations!",32,40+wob,6)
-	  print(timerstr,45,52,6)
-   print("deaths: "..deaths,45,60,6)
+  print("now find the bonus ending!",12,113,6)
+ elseif bonus then
+  --bonus ending
+  cls(0)
+	
+  map(mapx+64,mapy,0,0,16,32)
 	  
-	  print("now find the bonus ending!",12,113,6)
-	 elseif bonus then
-	  --bonus ending
-	  cls(0)
+  print("congratulations!",32,33+wob,11)
+  print("you have done what few",22,100,6)
+  print("have done",47,108,6)
 	  
-	  map(mapx+64,mapy,0,0,16,32)
-	  
-	  print("congratulations!",32,33+wob,11)
-	  print("you have done what few",22,100,6)
-	  print("have done",47,108,6)
-	  
-	  print(timerstr,45,52,6)
-   print("deaths: "..deaths,45,60,6)
+  print(timerstr,45,52,6)
+  print("deaths: "..deaths,45,60,6)
    
-   print("true ending♥",39,80,11)
+  print("true ending♥",39,80,11)
   end
  end
 end
