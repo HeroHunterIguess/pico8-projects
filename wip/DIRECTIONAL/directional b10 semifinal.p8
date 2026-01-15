@@ -2,17 +2,19 @@ pico-8 cartridge // http://www.pico-8.com
 version 43
 __lua__
 --directional
---a small game by hero ♥
+--a small game by hero♥
 --thanks for playing!
 
 playerx=64
 playery=125
 yvelocity=0
 xvelocity=0
+
 gravity=0.16
 currentlevel=0
 mapx=0
 mapy=0
+
 deaths=0
 switchcooldown=0
 continue=true
@@ -37,7 +39,7 @@ function checkcollision(flag,gmode)
  end
 end
 
---check if on ground or solid tile
+--check & return tile type
 function ontile()
  if playery==125 then
   return 1
@@ -56,6 +58,7 @@ function ontile()
  --check if on exit tile
  elseif checkcollision(5,true) then
   return 5
+ --lowk what is this ??
  elseif checkcollision(6,true) then
   return 6 
  else
@@ -91,7 +94,6 @@ function nextlevel(before)
 end
 
 --load a specific level number
---for testing and practicing
 function cheatload(level)
  for i=1,level do
   nextlevel(false)
@@ -113,16 +115,16 @@ end)
 --runs every frame
 function _update()
 
- --teleport to secret levels
+ --teleport to bonus levels
  if checkcollision(7,true) then
   cheatload(27)
   bonus=true
  end
-
  switchcooldown-=1
 
+ --practice mode level switcher
  if cheated and continue==false then
-  --practice mode level switcher
+ --next level
   if btn(4) and switchcooldown<0 then
    if bonus==false and currentlevel<25 then
     nextlevel(false)
@@ -132,6 +134,7 @@ function _update()
     switchcooldown=5
    end
   end
+  --previous level
   if btn(5) and switchcooldown<0 then
    if bonus==false and currentlevel>0 then
     nextlevel(true)
@@ -143,6 +146,7 @@ function _update()
   end
  end
 
+ --update timer vars
  if currentlevel!=0 then
   elapsed=time()-timer_start
   minutes=flr(elapsed/60)
@@ -156,7 +160,7 @@ function _update()
  elseif btn(1) then
   xvelocity+=0.29
  else
- xvelocity*=0.08 end
+  xvelocity*=0.08 end
 
  --set max velocities
  if xvelocity>2 then
@@ -168,12 +172,11 @@ function _update()
  if yvelocity<-10 then
   yvelocity=-10 end
 
- --keeping playery in bounds
+ --keeping player in bounds
  if playery>=126 then
   playery=126
  end
-	
- --keeping playerx in bounds
+ 
  if playerx<2 then
   playerx=2 
   xvelocity*=0.01
@@ -182,7 +185,7 @@ function _update()
   playerx=126
   xvelocity*=0.01
  end
-		
+
  --check killtile collisions
  if checkcollision(0,false) then
   yvelocity=0
@@ -257,9 +260,9 @@ end
 --drawing on screen every frame
 function _draw()
  cls(0)
- 
+
+--timer setup stuff
  if currentlevel!=0 then
-  --timer setup stuff
   elapsed=time()-timer_start
 
   minutes=flr(elapsed/60)
@@ -280,9 +283,9 @@ function _draw()
  
  --rendering the level
  map(mapx,mapy,0,0,16,32)
- 
+
+--drawing player
  if currentlevel!=26 then
-  --drawing player
   rectfill(playerx-1,playery-1,playerx+1,playery+1,9)
  end
  
@@ -308,7 +311,8 @@ function _draw()
   rectfill(90,1,126,7,1)
   print(timerstr,91,2,6)
  end
- 
+
+--display practice ui
  if continue==false then
   rectfill(30,121,94,127,1)
   print("practice enabled",31,122,8)
@@ -326,64 +330,66 @@ function _draw()
    end_time=time()
   end 
   
- --resetting all timer stuff
- elapsed=end_time-timer_start
- minutes=flr(elapsed/60)
- seconds=flr(elapsed%60)
- millis=flr(elapsed*1000)%1000
-  
- --setting all the extra 0's
- if seconds<10 then
-  seconds="0"..seconds
- end
- if minutes<10 then
-  minutesstr="0"..minutes
- end
- if millis<10 then
-  millis="00"..millis
- end
- if millis<100 then
-  millis="0"..millis
- end
-  
- timerstr=minutesstr..":"..seconds.."."..millis
-	 
- wob=sin(time()*2)
-	 
- --display practice mode end
- if cheated then
-  spr(32,31,55,2,2)
-  spr(32,47,55,2,2)
-  spr(32,63,55,2,2)
-  spr(32,79,55,2,2)
-  
-  print("congratulations!",32,30+wob,6)
-	  
-  print("practice enabled",32,72,8)
-	  
-  print(timerstr,45,42,8)
-  print("deaths: "..deaths,45,50,8)
- elseif not cheated and not bonus then
-  --default ending
-  print("congratulations!",32,40+wob,6)
-  print(timerstr,45,52,6)
-  print("deaths: "..deaths,45,60,6)
-	  
-  print("now find the bonus ending!",12,113,6)
- elseif bonus then
-  --bonus ending
-  cls(0)
-	
-  map(mapx+64,mapy,0,0,16,32)
-	  
-  print("congratulations!",32,33+wob,11)
-  print("you have done what few",22,100,6)
-  print("have done",47,108,6)
-	  
-  print(timerstr,45,52,6)
-  print("deaths: "..deaths,45,60,6)
+  --resetting all timer stuff
+  elapsed=end_time-timer_start
+  minutes=flr(elapsed/60)
+  seconds=flr(elapsed%60)
+  millis=flr(elapsed*1000)%1000
    
-  print("true ending♥",39,80,11)
+  --setting all the extra 0's
+  if seconds<10 then
+   seconds="0"..seconds
+  end
+  if minutes<10 then
+   minutesstr="0"..minutes
+  end
+  if millis<10 then
+   millis="00"..millis
+  end
+  if millis<100 then
+   millis="0"..millis
+  end
+  
+  timerstr=minutesstr..":"..seconds.."."..millis
+	 
+  wob=sin(time()*2)
+	 
+  --display practice mode end
+  if cheated then
+   spr(32,31,55,2,2)
+   spr(32,47,55,2,2)
+   spr(32,63,55,2,2)
+   spr(32,79,55,2,2)
+  
+   print("congratulations!",32,30+wob,6)
+	  
+   print("practice enabled",32,72,8)
+	  
+   print(timerstr,45,42,8)
+   print("deaths: "..deaths,45,50,8)
+
+  --default ending
+  elseif not cheated and not bonus then
+   print("congratulations!",32,40+wob,6)
+   print(timerstr,45,52,6)
+   print("deaths: "..deaths,45,60,6)
+	  
+   print("now find the bonus ending!",12,113,6)
+
+  --bonus ending
+  elseif bonus then
+   cls(0)
+	
+   map(mapx+64,mapy,0,0,16,32)
+	  
+   print("congratulations!",32,33+wob,11)
+   print("you have done what few",22,100,6)
+   print("have done",47,108,6)
+	  
+   print(timerstr,45,52,6)
+   print("deaths: "..deaths,45,60,6)
+   
+   print("true ending♥",39,80,11)
   end
  end
 end
