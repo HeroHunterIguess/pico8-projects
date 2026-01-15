@@ -1,7 +1,8 @@
 pico-8 cartridge // http://www.pico-8.com
 version 43
 __lua__
---a small game by hero♥
+--directional
+--a small game by hero ♥
 --thanks for playing!
 
 playerx=64
