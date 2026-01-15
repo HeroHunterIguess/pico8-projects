@@ -1,11 +1,12 @@
 pico-8 cartridge // http://www.pico-8.com
 version 43
 __lua__
-
 --directional
 --a small game by hero♥
 --thanks for playing!
 
+
+--game variables
 playerx=64
 playery=125
 yvelocity=0
@@ -18,6 +19,7 @@ mapy=0
 
 deaths=0
 switchcooldown=0
+
 continue=true
 cheated=false
 bonus=false
