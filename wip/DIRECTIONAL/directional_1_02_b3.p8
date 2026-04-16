@@ -22,7 +22,7 @@ player = {
 
 --general game vars
 gravity=0.16
-currentlevel=0
+current_lvl=0
 mapx=0
 mapy=0
 
@@ -52,18 +52,18 @@ function nextlevel(before)
  player.has_moved=false
  
  if not before then
-  currentlevel+=1
+  current_lvl+=1
   mapx+=16
-  if currentlevel%8==0 then
+  if current_lvl%8==0 then
    mapx=0
    mapy+=16
   end
  end
  
  if before then
-  currentlevel-=1
+  current_lvl-=1
   mapx-=16
-  if currentlevel%8==7 then
+  if current_lvl%8==7 then
    mapx=16*7
    mapy-=16
   end
@@ -73,7 +73,7 @@ function nextlevel(before)
  player.y=126
  player.vel.x=0
  player.vel.y=0
- if currentlevel==1 then
+ if current_lvl==1 then
   timer_start=time()
  end
 end
@@ -140,10 +140,10 @@ function _update()
  if not continue then
  --next level
   if btn(4) and switchcooldown<0 then
-   if not bonus and currentlevel<25 then
+   if not bonus and current_lvl<25 then
     nextlevel(false)
     switchcooldown=5
-   elseif bonus and currentlevel<29 then
+   elseif bonus and current_lvl<29 then
     nextlevel(false)
     switchcooldown=5
    end
@@ -151,10 +151,10 @@ function _update()
   
   --previous level
   if btn(5) and switchcooldown<0 then
-   if bonus==false and currentlevel>0 then
+   if bonus==false and current_lvl>0 then
     nextlevel(true)
     switchcooldown=5
-   elseif bonus and currentlevel>27 then
+   elseif bonus and current_lvl>27 then
     nextlevel(true)
     switchcooldown=5
    end
@@ -162,7 +162,7 @@ function _update()
  end
 
  --update timer vars
- if currentlevel!=0 then
+ if current_lvl!=0 then
   elapsed=time()-timer_start
   minutes=flr(elapsed/60)
   seconds=flr(elapsed%60)
@@ -266,8 +266,8 @@ function _update()
    nextlevel(false)
    --go to end screen if done 
    --with bonus #5
-   if currentlevel==32 then
-    currentlevel=26
+   if current_lvl==32 then
+    current_lvl=26
    end
   else
    player.vel.y=0
@@ -303,7 +303,7 @@ function _draw()
  
  
  --timer setup stuff
- if currentlevel!=0 then
+ if current_lvl!=0 then
   timerstr=update_time(time(),timer_start)
  end
  
@@ -311,26 +311,26 @@ function _draw()
  map(mapx,mapy,0,0,16,32)
 
  --drawing player
- if currentlevel!=26 and currentlevel!=30 then
+ if current_lvl!=26 and current_lvl!=30 then
   rectfill(player.x-1,player.y-1,player.x+1,player.y+1,9)
  end
  
  --display info on first level
- if currentlevel==0 then
+ if current_lvl==0 then
   print("⬅️ use arrows to move ➡️",15,2,6)
   print("tiles push you in the arrows",5,15,6)
   print("direction",45,22,6)
  end
  
  --display ui overlay
- if currentlevel!=0 and currentlevel!=26 and currentlevel!=30 then
+ if current_lvl!=0 and current_lvl!=26 and current_lvl!=30 then
   rectfill(1,1,21,13,1)
-  if currentlevel<26 then
+  if current_lvl<26 then
    print("level ",2,2,6)
-   print(currentlevel)
-  elseif currentlevel>26 then
+   print(current_lvl)
+  elseif current_lvl>26 then
    print("bonus ",2,2,6)
-   print((currentlevel-26).."/3")
+   print((current_lvl-26).."/3")
   end
   
   --displaying timer
@@ -351,7 +351,7 @@ function _draw()
  end
  
  --display end screen
- if currentlevel==26 or currentlevel==30 then
+ if current_lvl==26 or current_lvl==30 then
   if end_time==nil then
    end_time=time()
   end 
